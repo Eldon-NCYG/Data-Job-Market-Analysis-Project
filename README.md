@@ -63,13 +63,13 @@ I considered performing hypothesis testing during this EDA to evaluate statistic
 
 ## Data Cleaning and Schema Normalization
 
-![alt text](Images\dataset_problem.png)
+![alt text](Images/dataset_problem.png)
 The original dataset contained two problematic columns: job_skills and job_type_skills. These fields were stored as Python lists and nested JSON dictionaries, which are difficult to query and analyze in SQL-based environments like Power BI (for further analysis later).
 
 #### Transformation Process
 
 To enable relational analysis, I restructured the dataset by removing these columns from the `job_postings` table and transforming them into normalized tables. This process allowed me to build a clean schema that relationally connects `job_postings`, `job_skills`, and `job_skill_categories`.
-![alt text](Images\data_jobs_erd.jpg)
+![alt text](Images/data_jobs_erd.jpg)
 With the help of Excel and Power Query, I was able to extract the data in the original dataset and create separate CSVs representing the different tables (inside the Schema Folder). To summarise this process, I extracted all of the unique job skills and associated categories from the `job_skills` and `job_type_skills` columns in the original dataset. A unique identifier was assigned for each unique skill and category. Every job posting was then connected to its corresponding skill(s). Each skill was also connected to its category to complete the normalized relational structure.
 
 #### Other Data Cleaning Processes
