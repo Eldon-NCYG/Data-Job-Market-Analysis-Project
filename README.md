@@ -45,14 +45,14 @@ This project demonstrates the following essential data analytics skills:
 The goal of this EDA was to understand and familiarise myself with the structure and the different patterns/trends of the dataset. My familiarity of the dataset is crucial for when I go into further and deeper analysis later on. The analysis was performed using Python with the pandas, matplotlib library. All code, visualizations, and detailed analysis are available in this [Jupyter Notebook](data_jobs_eda.ipynb).
 
 #### Considering Hypothesis Testing:
-I considered performing hypothesis testing during this EDA to evaluate statistical significance between variables (e.g., salary differences between job titles or countries). However, because this dataset represents a scraped population of job listings rather than a random sample, descriptive and exploratory analysis provides more meaningful insights than inferential statistics. So for this project, I decided hypothesis testing was not necessary.
 
+I considered performing hypothesis testing during this EDA to evaluate statistical significance between variables (e.g., salary differences between job titles or countries). However, because this dataset represents a scraped population of job listings rather than a random sample, descriptive and exploratory analysis provides more meaningful insights than inferential statistics. So for this project, I decided hypothesis testing was not necessary.
 
 #### Important Things I discovered about the overall structure of the dataset from this EDA:
 
-- There are a lot of rows that are missing data for their information about salary. This is because not all companies will list down their given salary for their job listings or will only have either the yearly or hourly salary listed.
-- The `job_skills` and `job_type_skills` columns contain an unusual type of data. `job_skills` contains a list of data (in python syntax) while `job_type_skills` is in JSON form. This type of data is very hard to use. These two columns need to be cleaned.
-- Not all of these columns are useful for the purpose of my analysis. I think that the column `search_location` wouldn't really provide much for this project. So I will remove this column when I clean the data.
+- Many salary fields are missing because companies often don’t provide salary information, or they list only yearly or hourly pay.
+- The job_skills and job_type_skills columns use non‑tabular formats (Python lists and JSON), which makes them difficult to query and requires cleaning.
+- Not all of these columns are for analysis. For example, search_location doesn’t add value and will be removed during cleaning.
 
 #### Intersting and Potentially Insightful Data from this EDA:
 
@@ -61,4 +61,20 @@ I considered performing hypothesis testing during this EDA to evaluate statistic
 - The most in demand job titles were the Data Jobs - Data Engineers, Data Analysts, and Data Scientists.
 - The top 5 countries with the most job listings were the U.S., India, The U.K., France, and Germany.
 
-## Data Cleaning
+## Data Cleaning and Schema Normalization
+
+![alt text](Images\dataset_problem.png)
+The original dataset contained two problematic columns: job_skills and job_type_skills. These fields were stored as Python lists and nested JSON dictionaries, which are difficult to query and analyze in SQL-based environments like Power BI (for further analysis later).
+
+#### Transformation Process
+
+To enable relational analysis, I restructured the dataset by removing these columns from the `job_postings` table and transforming them into normalized tables. This process allowed me to build a clean schema that relationally connects `job_postings`, `job_skills`, and `job_skill_categories`.
+![alt text](Images\data_jobs_erd.jpg)
+With the help of Excel and Power Query, I was able to extract the data in the original dataset and create separate CSVs representing the different tables (inside the Schema Folder). To summarise this process, I extracted all of the unique job skills and associated categories from the `job_skills` and `job_type_skills` columns in the original dataset. A unique identifier was assigned for each unique skill and category. Every job posting was then connected to its corresponding skill(s). Each skill was also connected to its category to complete the normalized relational structure.
+
+#### Other Data Cleaning Processes
+
+- Removed unnecessary columns: Columns such as search_location did not contribute meaningful information to the analysis, so they were dropped to simplify the schema.
+- Standardized text formatting for the `job_skills` names - ensured consistent casing, spelling, and removing whitespace.
+- Removed Duplicates: There were many job skills that were the same but spelt differently or abbreviated, so those duplicate skills were removed.
+- Checked referential correctness to ensure IDs and relationships aligned across tables.
