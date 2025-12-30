@@ -11,14 +11,14 @@ I’m studying Computer Science and Statistics, and I wanted to explore what the
 - Which technical skills are most in demand?
 - What's the split between junior, mid, and senior roles?
 
-#### This project demonstrates the following essential data analytics skills:
+### This project demonstrates the following essential data analytics skills:
 
 - Cleaning and transforming messy data
 - Building a repeatable SQL based workflow
 - Performing exploratory data analysis in Python & Excel
 - Creating interactive visualisations with Power BI that communicate clearly communicate insights for a non-technical audience
 
-## Data Dictionary
+# Data Dictionary
 
 | Column Name             | Description                                                               | Type        | Source           |
 | ----------------------- | ------------------------------------------------------------------------- | ----------- | ---------------- |
@@ -40,37 +40,37 @@ I’m studying Computer Science and Statistics, and I wanted to explore what the
 | `job_skills`            | List of relevant skills extracted from job posting using PySpark          | Parsed List | NLP Extracted    |
 | `job_type_skills`       | Dictionary mapping skill types (e.g., 'cloud', 'libraries') to skill sets | Parsed Dict | NLP Extracted    |
 
-## Exploratory Data Analysis
+# Exploratory Data Analysis
 
 The goal of this EDA was to understand and familiarise myself with the structure and the different patterns/trends of the dataset. My familiarity of the dataset is crucial for when I go into deeper analysis later on. The analysis was performed using Python with the pandas, matplotlib library. All code, visualizations, and detailed analysis are available in this [Jupyter Notebook](data_jobs_eda.ipynb).
 
-#### Considering Hypothesis Testing:
+## Considering Hypothesis Testing:
 
 I considered performing hypothesis testing during this EDA to evaluate statistical significance between variables (e.g., salary differences between job titles or countries). However, because this dataset represents a scraped population of job listings rather than a random sample, descriptive and exploratory analysis provides more meaningful insights than inferential statistics. So for this project, I decided hypothesis testing was not necessary.
 
-#### Important Things I discovered about the overall structure of the dataset from this EDA:
+## Important Things I discovered about the overall structure of the dataset from this EDA:
 
 - Many salary fields are missing because companies often don’t provide salary information, or they list only yearly or hourly pay.
 - The job_skills and job_type_skills columns use non‑tabular formats (Python lists and JSON), which makes them difficult to query and requires cleaning.
 - Not all of these columns are for analysis. For example, search_location doesn’t add value and will be removed during cleaning.
 
-#### Intersting and Potentially Insightful Data from this EDA:
+## Intersting and Potentially Insightful Data from this EDA:
 
 - The salary ceiling is around $400k - $920k
 - Machine Learning and Software Engineers have higher salaries than other job titles.
 - The most in demand job titles were the Data Jobs - Data Engineers, Data Analysts, and Data Scientists.
 - The top 5 countries with the most job listings were the U.S., India, The U.K., France, and Germany.
 
-## Data Cleaning and Schema Normalization
+# Data Cleaning and Schema Normalization
 
-#### Non-tabular Columns
+## Non-tabular Columns
 
 ![alt text](Images/dataset_problem.png)
 The original dataset contained two problematic columns: job_skills and job_type_skills. These fields were stored as Python lists and nested JSON dictionaries, which are difficult to query and analyze in SQL-based environments like Power BI (for further analysis later).
 
 To enable relational analysis, I restructured the dataset by removing these columns from the `job_postings` table and transforming them into normalized tables. This process allowed me to build a clean schema that relationally connects `job_postings`, `job_skills`, and `job_skill_categories`.
 
-#### Transformation Process Summary
+## Transformation Process Summary
 
 - With the help of Excel and Power Query, I was able to extract the data in the original dataset and create separate CSVs representing the different tables (inside the Schema Folder).
 - I extracted all of the unique job skills and associated categories from the `job_skills` and `job_type_skills` columns in the original dataset.
@@ -79,23 +79,23 @@ To enable relational analysis, I restructured the dataset by removing these colu
 - Each skill was also connected to its category to complete the normalized relational structure.
   ![alt text](Images/data_jobs_erd.jpg)
 
-#### Other Data Cleaning Processes
+## Other Data Cleaning Processes
 
 - Removed unnecessary columns: Columns such as search_location did not contribute meaningful information to the analysis, so they were dropped to simplify the schema.
 - Standardized text formatting for the `job_skills` names - ensured consistent casing, spelling, and removing whitespace.
 - Removed Duplicates: There were many job skills that were the same but spelt differently or abbreviated, so those duplicate skills were removed.
 - Checked referential correctness to ensure IDs and relationships aligned across tables.
 
-## Schema Architecture in MySQL
+# Schema Architecture in MySQL
 
-I implemented the ERD I designed into a fully normalized, relational, schema in MySQL that follows the industry-standard star-schema design, allowing slicing of the data by any of the categorical columns - [text](main.sql). This relational schema ensures:
+I implemented the ERD I designed into a fully normalized, relational, schema in MySQL that follows the industry-standard star-schema design, allowing slicing of the data by any of the categorical columns - [main sql file](main.sql). This relational schema ensures:
 
 - Fast, efficient querying across hundreds of thousands of rows
 - Referential integrity between job postings, skills, and skill categories
 - Scalable joins for skill‑based salary analysis, demand trends, and cross‑country comparisons
 - A repeatable ingestion pipeline that can be re‑run as new data becomes available
 
-#### Schema Overview
+## Schema Overview
 
 The database consists of four core tables:
 
@@ -104,7 +104,7 @@ The database consists of four core tables:
 - `job_skill_categories` - a lookup table grouping skills into specific categories.
 - `job_skill_connector` - a bridge table implementing a many-to-many relationship between job postings and skills.
 
-#### Data Ingestion
+##  Data Ingestion
 
 To handle large CSV imports (400k + job postings and 1m + job skill connections), I implemented a high‑performance loading process using LOAD DATA INFILE, temporarily disabling foreign key checks to speed up ingestion while preserving integrity once loading is complete. Below is the query I wrote to import the job_skills_connector csv, which had 1 million + rows of data.
 
@@ -120,9 +120,9 @@ IGNORE 1 ROWS;
 
 The importing process takes a minute max. If I were to use the traditional Table Data Import Wizard to import the CSVs into the tables, it would take a couple of hours (I know this because I tried this method at first...).
 
-#### Unified Job-Skill-Connector View
+## Unified Job-Skill-Connector View
 
-To connect each job posting to its associated skills and each skill to its broader category, I created a unified SQL view that encapsulates the full many‑to‑many relationship across the schema. Instead of repeatedly writing long join statements, this view provides a single, analysis‑ready structure that downstream tools can query directly.
+To perform analysis involving both job postings and their associated skills, I created a unified SQL view that encapsulates the many‑to‑many relationship across the schema. (Queries that don't involve job skills can use the `job_postings` table)
 
 ```
 CREATE OR REPLACE VIEW v_job_skill_analysis AS
@@ -150,5 +150,64 @@ INNER JOIN job_skills AS js ON jconn.skill_id = js.skill_id
 INNER JOIN job_skill_categories AS jsc ON js.category_id = jsc.category_id;
 
 ```
+- **Primary Fact Table - `job_postings`:** Used as the primary facts source for general job market metrics. It is used for queries that do not require a job's associated skills. Using the base table minimizes computational overhead and improves query performance by avoiding unnecessary joins.
 
-The `v_job_skill_details` view acts as the main analytical interface for the project. It allows all relevant data to be shown through a single, query‑ready structure. This makes it easier to perform further analysis and build interactive dashboards without repeatedly reconstructing complex joins.
+
+- **Analytical View - `v_job_skill_analysis`:** A unified interface that encapsulates the many-to-many relationships between job postings, job skills, and skill categories. Instead of repeatedly writing long join statements, this view provides structure that tools like Power BI (used later) can query directly without the need to manually reconstruct the relational joins for every session.
+
+
+
+# Deep Analysis into the Data
+Rather than doing a simple surface-level summary about the data (which can be shown through data visualisations alone), I wanted to deliver a deeper analysis to uncover less obvious patterns, trends, and relationships. I have organised my deep analysis into five different categories: Job Titles, Job Location, Salaries, Trends, and Job Skills. Each category has questions designed to yieled deeper, decision-relevant insights.
+
+## Job Titles: Role Comparisons
+
+**Market Share by Role:** What is the total count and percentage share of each job title in the overall dataset?
+
+**Seniority Difference:** Does seniority affect the a role's average and median salary, and if so, how much?
+
+**Skill Overlap between Data Analysts & Data Scientists:** What percentage of Data Analysts skills overlap with Data Scientists skills? (I'm most interested in both of these roles)
+
+**Platform Role Favourites:** Are certain job titles more likely to be posted on specific platforms? (E.g. is does  LinkedIn have more postings for Data Analaysts compared to Data Scientists?)
+
+## Job Location Impact:
+**Remote Job Pay Gap:** For each country, compare the number of remote and on-site jobs and the average/median salary for each role.
+
+**International Skill Demand:** Do different countries have different skill requirements for each category of skills?
+
+**Global Opportunity Density:** Which countries have the highest number of job postings relative to the number of unique companies hiring there?
+
+**Country Degree Importance:** Does the percentage of roles that require a degree vary significantly between different countries?
+
+**Market Concentration by Country:** Which countries have the most job postings but lowest number of unique companies hiring?
+
+
+## Salary Analysis:
+
+**Skill Category Value:** Which skill category is associated with the highest median/average annual salary?
+
+**Health Insurance Benefit:** Do jobs that offer health insurance tend to have higher or lower base salaries than those that don't?
+
+**No-Degree Opportunity Cost:** For roles that don't require a degree, is there a significant difference in salary?
+
+
+## Trends within The Data: Time-Series Analysis
+**Were there hiring seasons during 2024?:** Which month in 2024 had the highest and lowest volume of new job postings?
+
+**Remote Work Adoption:** Has the percentage of "Remote" job postings increased, decreased, or stayed steady month-over-month throughout 2024?
+
+**Salary Inflation Trends:** Did the average offered salary for Data Analysts change between the first half and the second half of the year?
+
+**Job Postings Quarterly Distribution:** What is the distribution of job postings across the four quarters of the year?
+
+
+## Comparative Analysis of Job Skills:
+
+**Skill Saturation vs. Pay:** Which skills have a high frequency (high demand) but below-average salary (low value) and vice-versa?
+
+**Skill Category Diversity:** Which job titles require the most diverses set of skill categories?
+
+**Cloud Provider Proportions:** Within the 'Cloud' category, what is the ratio of postings for AWS vs. Azure vs. GCP?
+
+**Country Skill Favours:** Do different countries value different skills more?
+

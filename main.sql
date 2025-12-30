@@ -105,7 +105,7 @@ SELECT count(*) FROM job_skill_connector;
 
 
 -- View with Join Statement connecting job postings, job skills and skill categories (only showing jobs that have skills listed)
-CREATE OR REPLACE VIEW v_job_skill_analysis AS
+CREATE OR REPLACE VIEW v_job_skill_details AS
 SELECT 
     jp.job_id,
     jp.job_title_short,
