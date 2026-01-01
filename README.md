@@ -63,39 +63,39 @@ I considered performing hypothesis testing during this EDA to evaluate statistic
 
 # Data Cleaning and Schema Normalization
 
-## Non-tabular Columns
+### Non-tabular Columns
 
 ![alt text](Images/dataset_problem.png)
-The original dataset contained two problematic columns: job_skills and job_type_skills. These fields were stored as Python lists and nested JSON dictionaries, which are difficult to query and analyze in SQL-based environments like Power BI (for further analysis later).
+The original dataset contained two problematic columns: job_skills and job_type_skills. These fields were stored as Python lists and nested JSON dictionaries, which are difficult to query and analyze in SQL-based environments.
 
 To enable relational analysis, I restructured the dataset by removing these columns from the `job_postings` table and transforming them into normalized tables. This process allowed me to build a clean schema that relationally connects `job_postings`, `job_skills`, and `job_skill_categories`.
 
-## Transformation Process Summary
+### Transformation Process Summary
 
-- With the help of Excel and Power Query, I was able to extract the data in the original dataset and create separate CSVs representing the different tables (inside the Schema Folder).
-- I extracted all of the unique job skills and associated categories from the `job_skills` and `job_type_skills` columns in the original dataset.
-- A unique identifier was assigned for each unique skill and category.
-- Every job posting was then connected to its corresponding skill(s).
-- Each skill was also connected to its category to complete the normalized relational structure.
-  ![alt text](Images/data_jobs_erd.jpg)
+- **Extraction & Initial Cleaning:** With the help of **Excel** and **Power Query**, I was able to extract the data in the original dataset and create separate CSVs representing the different tables (inside the Schema Folder).
+- **Skill & Category Mapping:** I extracted all unique job skills and associated categories from the `job_skills` & `job_type_skills` columns in the original dataset. A unique identifier was assigned for each unique skill and category. The results are [job_skills.csv](Schema/job_skills.csv) & [job_skill_categories.csv](Schema/job_skill_categories.csv).
+- **Python Pandas Data Cleaning:** Because the mapping of jobs to skills resulted in a dataset exceeding 2 million rows, I utilized Python (Pandas) to handle the final transformation, resulting in [cleaned_job_skill_connectir.csv](Schema/cleaned_job_skill_connector.csv) .
+- **Ensuring Data Integrity:** During the process, I used the .explode() method, I broke down the comma-separated skill strings into individual rows, ensuring no data was lost to Excel's row limits and ensuring data integrity. The full process can be viewed [here](data_cleaning.py).
+- *More details about the Python cleaning process in the **Difficulties & Challenges** section at the bottom.*
+![alt text](Images/data_jobs_erd.jpg)
 
-## Other Data Cleaning Processes
+### Other Data Cleaning Processes
 
-- Removed unnecessary columns: Columns such as search_location did not contribute meaningful information to the analysis, so they were dropped to simplify the schema.
-- Standardized text formatting for the `job_skills` names - ensured consistent casing, spelling, and removing whitespace.
-- Removed Duplicates: There were many job skills that were the same but spelt differently or abbreviated, so those duplicate skills were removed.
-- Checked referential correctness to ensure IDs and relationships aligned across tables.
+- **Removed Unnecessary Columns:** Columns such as search_location did not contribute meaningful information to the analysis, so they were dropped to simplify the schema.
+- **Standardised Text Formatting:** For the `job_skills` names - ensured consistent casing, spelling, and removing whitespace.
+- **Removed Duplicates:** There were many job skills that were the same but spelt differently or abbreviated, so those duplicate skills were removed.
+- **Referential Correctness:** I performed validation checks across all records to ensure IDs and relationships aligned across the schema.
 
 # Schema Architecture in MySQL
 
-I implemented the ERD I designed into a fully normalized, relational, schema in MySQL that follows the industry-standard star-schema design, allowing slicing of the data by any of the categorical columns - [main sql file](main.sql). This relational schema ensures:
+I implemented the ERD I designed into a fully normalized, relational, schema in MySQL that follows the industry standard star schema design, allowing slicing of the data by any of the categorical columns - [main sql file](main.sql). This relational schema ensures:
 
 - Fast, efficient querying across hundreds of thousands of rows
 - Referential integrity between job postings, skills, and skill categories
 - Scalable joins for skill‑based salary analysis, demand trends, and cross‑country comparisons
 - A repeatable ingestion pipeline that can be re‑run as new data becomes available
 
-## Schema Overview
+### Schema Overview
 
 The database consists of four core tables:
 
@@ -104,12 +104,12 @@ The database consists of four core tables:
 - `job_skill_categories` - a lookup table grouping skills into specific categories.
 - `job_skill_connector` - a bridge table implementing a many-to-many relationship between job postings and skills.
 
-##  Data Ingestion
+###  Data Ingestion
 
 To handle large CSV imports (400k + job postings and 1m + job skill connections), I implemented a high‑performance loading process using LOAD DATA INFILE, temporarily disabling foreign key checks to speed up ingestion while preserving integrity once loading is complete. Below is the query I wrote to import the job_skills_connector csv, which had 1 million + rows of data.
 
 ```
-LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/job_skill_connector.csv'
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/cleaned_job_skill_connector.csv'
 IGNORE -- Skip duplicates
 INTO TABLE job_skill_connector
 FIELDS TERMINATED BY ','
@@ -153,12 +153,12 @@ INNER JOIN job_skill_categories AS jsc ON js.category_id = jsc.category_id;
 - **Primary Fact Table - `job_postings`:** Used as the primary facts source for general job market metrics. It is used for queries that do not require a job's associated skills. Using the base table minimizes computational overhead and improves query performance by avoiding unnecessary joins.
 
 
-- **Analytical View - `v_job_skill_analysis`:** A unified interface that encapsulates the many-to-many relationships between job postings, job skills, and skill categories. Instead of repeatedly writing long join statements, this view provides structure that tools like Power BI (used later) can query directly without the need to manually reconstruct the relational joins for every session.
+- **Analytical View - `v_job_skill_analysis`:** A unified interface that encapsulates the many-to-many relationships between job postings, job skills, and skill categories. Instead of repeatedly writing long join statements, this view provides structure that can be queried directly without the need to manually reconstruct the relational joins for every session.
 
 
 
 # Deep Analysis into the Data
-Rather than doing a simple surface-level summary about the data (which can be shown through data visualisations alone), I wanted to deliver a deeper analysis to uncover less obvious patterns, trends, and relationships. I have organised my deep analysis into five different categories: Job Titles, Job Location, Salaries, Trends, and Job Skills. Each category has questions designed to yieled deeper, decision-relevant insights. You can view the full analysis in the Deep Analysis Section of the [main sql file](main.sql).
+Rather than doing a simple surface-level summary about the data (which can be shown through data visualisations alone), I wanted to deliver a deeper analysis to uncover less obvious patterns, trends, and relationships. I have organised my deep analysis into five different categories: Job Titles, Job Location, Salaries, and Trends. Each category has questions designed to yieled deeper, decision-relevant insights. You can view the full analysis in the Deep Analysis Section of the [main sql file](main.sql).
 
 ### Job Titles: Role Comparisons
 
@@ -198,9 +198,16 @@ Rather than doing a simple surface-level summary about the data (which can be sh
 
 
 
-**Roles Trending in 2024:** Were there any roles that saw a huge increase in popularity throughout 2024?
+**Skills Trending in 2024:** Were there any roles that saw a huge increase in popularity throughout 2024?
 
 
 
 
 
+# Difficulties & Challenges
+
+### Data Truncation via Excel Row Limits
+While conducting the SQL deep analysis, I discovered that my quarterly trend results for the latter half of the year (Q3 and Q4) were significantly lower than expected. Upon investigation, I identified that the [job_skill_connector](Schema/Unused/job_skill_connector_truncated.csv) table, which manages the many-to-many relationship between jobs and skills only contained the connections for about half of the jobs in the dataset. Because the data was initially processed and exported through Excel (CSV version), it was silently truncated at 1,048,576 rows, which is the maximum limit for an Excel worksheet. This resulted in the loss of nearly half of the skill-mapping data, leading to inaccurate insights during the initial phase of the project (all other tables are fine).
+
+### Resolving the Problem
+To resolve this and ensure data integrity, instead of using Excel & Power Query for cleaning the `job_skill_connector`, I used Power Query and Python, specifically the Pandas library which can handle millions of rows without truncation. Once I cleaned the data, I ensured data integrity by making sure all records within the `job_skill_connector` performing a row-count validation between the raw source file and the SQL database.

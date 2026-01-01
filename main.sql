@@ -89,7 +89,9 @@ CREATE TABLE job_skill_connector (
 -- Importing job_skill_connector csv (over 1million rows, so we need to speed up process)
 SET FOREIGN_KEY_CHECKS = 0;
 
-LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/job_skill_connector.csv'
+TRUNCATE TABLE job_skill_connector;
+
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/cleaned_job_skill_connector.csv'
 IGNORE -- <--- This tells MySQL to skip duplicates and keep going
 INTO TABLE job_skill_connector
 FIELDS TERMINATED BY ',' 
@@ -438,19 +440,19 @@ ORDER BY total_growth_pct DESC;
     
     
 
--- Roles Trending in 2024: Were there any roles that saw a huge increase in popularity throughout 2024?
+-- Skills Trending in 2024: Were there any Skills that saw a huge increase in popularity throughout 2024?
 
-with role_quarters AS (
+with skill_quarters AS (
 	SELECT
-		job_title_short,
+		skill_name,
         QUARTER(job_posted_date) as quarter_num,
         COUNT(job_title_short) as job_count
 	FROM v_job_skill_details
-    GROUP BY job_title_short, quarter_num
+    GROUP BY skill_name, quarter_num
 ),
 quarter_pivot AS (
     SELECT 
-        job_title_short,
+        skill_name,
         MAX(CASE WHEN quarter_num = 1 THEN job_count ELSE 0 END) AS Q1,
         MAX(CASE WHEN quarter_num = 2 THEN job_count ELSE 0 END) AS Q2,
         MAX(CASE WHEN quarter_num = 3 THEN job_count ELSE 0 END) AS Q3,
@@ -460,14 +462,15 @@ quarter_pivot AS (
          job_count ELSE 0 END) +
          MAX(CASE WHEN quarter_num = 3 THEN job_count ELSE 0 END) +
          MAX(CASE WHEN quarter_num = 4 THEN job_count ELSE 0 END)) AS total_year_count
-    FROM role_quarters
-    GROUP BY job_title_short
+    FROM skill_quarters
+    GROUP BY skill_name
 )
 SELECT 
-	job_title_short,
+	skill_name,
     Q1, Q2, Q3, Q4,
 	CONCAT(ROUND((((total_year_count - Q1) / Q1) * 100), 1), '%') as total_growth_pct
 FROM quarter_pivot
+WHERE (Q1 + Q2 + Q3 + Q4) > 500
 ORDER BY total_growth_pct DESC;
 
 
