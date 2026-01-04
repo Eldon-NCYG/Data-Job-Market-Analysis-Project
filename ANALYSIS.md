@@ -9,16 +9,24 @@ Rather than doing a simple surface level summary about the data (which can be sh
 I have organised my analysis into four different categories of questions. Each category has questions designed to yieled deeper, decision-relevant insights.
 
 
-### Technical Skill Importance: What skills should I learn to stay ahead of the curve?
+### Technical Skill Importance: What skills should I learn to stay ahead of the curve and have the best ROI?
 
-#### **Skills Trending in 2024:** Were there any skills that saw a huge increase in popularity throughout 2024?
-
-#### **The Foundational Baseline:** What are the universal & foundation skills that every data professional must have, regardless of title and seniority?
+#### **Foundational Skills:** What are the universal foundation skills that every data professional must have, regardless of title and seniority?
 
 
-#### **Do different roles have a wider variety skillset?:** What is the average unique number of unique skills for each role and which skill is the most popular?
+#### **Skills Trending in 2024:** Which emerging skills saw the highest growth in 2024? Does this pose a shift in the industry's standard tech stack for the future?
 
 
+#### **Skill Category Value:** Which skill category categories currently have the highest average salaries, and does this remain consistent across different seniority levels?
+
+#### **Skill Density & Compensation:** Does a broader toolkit actually lead to a higher pay?
+
+
+
+### Job market Trends:
+**Were there hiring seasons during 2024?:** Which month in 2024 had the highest and lowest volume of new job postings?
+
+**Seniority Bias?:** Is the market favouring senior or junior roles? How did the number of senior and junior roles change throughout 2024?
 
 
 
@@ -45,7 +53,7 @@ I have organised my analysis into four different categories of questions. Each c
 **Market Share & Saturation** 
 Which roles dominate and are the most in-demand in the current data job market.
 
-**Skill Overlap between Data Analysts & Data Scientists:** What percentage of Data Analysts skills overlap with Data Scientists skills? (I'm most interested in both of these roles)
+#### **Skill Overlap between Data Analysts & Data Scientists:** What percentage of Data Analysts skills overlap with Data Scientists skills? (I'm most interested in both of these roles)
 
 
 
@@ -72,10 +80,7 @@ Which roles dominate and are the most in-demand in the current data job market.
 
 
 
-### Trends within The Data: Time-Series Analysis
-**Were there hiring seasons during 2024?:** Which month in 2024 had the highest and lowest volume of new job postings?
 
-**Seniority Bias?:** Is the market favouring senior or junior roles? How did the number of senior and junior roles change throughout 2024?
 
 
 
