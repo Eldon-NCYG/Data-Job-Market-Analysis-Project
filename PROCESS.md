@@ -141,8 +141,13 @@ INNER JOIN job_skill_categories AS jsc ON js.category_id = jsc.category_id;
 
 
 # Deep Analysis into the Data
-Rather than doing a simple surface-level summary about the data (which can be shown through data visualisations alone), I wanted to deliver a deeper analysis to uncover less obvious patterns, trends, and relationships. I have organised my deep analysis into five different categories: Job Titles, Job Location, Salaries, and Trends. Each category has questions designed to yield deeper, decision-relevant insights. You can view the full analysis in the Deep Analysis Section of the [here](ANALYSIS.md).
+Rather than doing a simple surface-level summary about the data (which can be shown through data visualisations alone), I wanted to deliver a deeper analysis to uncover less obvious patterns, trends, and relationships. The full analysis and  in the Deep Analysis Section of the [here](ANALYSIS.md).
 
+#### For Each Executive Question's Sub Question:
+1. **Extraction & Querying:** An SQL query was written to retrieve the necessary data to answer the question [(SQL analysis file)](sql_scripts/analysis.sql).
+2. **Data Refinement:** Exported query results to Excel for final data cleaning and structural adjustments.
+3. **Visualisation:** Developed custom charts and visualisation within the same [Excel file](Visualisations/analysis_visualisations.xlsx) to transform raw numbers in a table into a visual narrative.
+4. **Insights Extraction:** Interpreted the data to form "Key Insights," providing a high-level summary at the end of each section for executive review.
 
 
 
