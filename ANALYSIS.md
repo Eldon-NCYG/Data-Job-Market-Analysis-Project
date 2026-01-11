@@ -18,7 +18,8 @@ I have organised my analysis into four different categories of questions. Each c
 - **Opportunity Cost:** If someone lacks Python or SQL in their skillset, statistically, they are out of over half of the total jobs in this dataset.
 - These two skills would be considered foundational skills every individual in the job market should know.
 - **Cloud Computing Rise:** There is also a strong demand in cloud computing platforms like AWS (21%) and Azure (19.6%). This makes sense as cloud computing has been rising in popularity in the past couple of years.
-![Foundational Skills Visualisation](<Images/Analysis Images/Skills/skills_foundational_vis.pngg>)
+![Foundational Skills Visualisation](<Images/Analysis Images/Skills/skills_foundational_vis.png>)
+
 
 ### **Skills Trending in 2024:**
 
@@ -46,7 +47,7 @@ I have organised my analysis into four different categories of questions. Each c
 
 #### Does a broader toolkit (average unique skill for a job posting) actually lead to a higher pay?
 
-![Skill Density & Compensation Table](<Images/Analysis Images/Skills/skills_density_compensation.png>)
+![Skill Density & Compensation Table](<Images/Analysis Images/Skills/skills_variety_compensation.png>)
 ![Skill Density & Compensation Vis](<Images/Analysis Images/Skills/skill_variety_compensation_vis.png>)
 ![Skill Density & Compensation Distribution](<Images/Analysis Images/Skills/skill_variety_compensation_vis_2.png>)
 - **Efficiency Collapse:** From an ROI perspective, skill efficiency significantly drops as you add more skill requirements. A specialist (1 - 2 skills) earns roughly $278k per skill whereas a standard professional (3 - 5 skills) earns an average of $60k per skill. By the time a professional reaches 10+ skills, they are earning only about $19k per skill. This is about a 14x decrease from a specialist with 1 - 2 skills.
@@ -64,7 +65,7 @@ I have organised my analysis into four different categories of questions. Each c
 
 ### **Market Share & Saturation**
 #### Which roles dominate and are the most in-demand in the current data job market.
-![Job Market Share](<Images/Analysis Images/Market Trends/job_market_share.png>)
+![Job Market Share](<Images/Analysis Images/Market Trends/job_market_share_table.png>)
 - This is just a quick reference for the data job market share. It is always helpful to know what the distribution is like for future reference.
 ![Job Market Share Chart](<Images/Analysis Images/Market Trends/job_market_share_vis.png>)
 
@@ -109,25 +110,60 @@ The month over month percentage change is showing a steady decline as the year p
 - **Hiring Seasonality:** The market has three distinct phases: a Q1 Peak (Jan-Feb), a Mid-Year Surge (July), and a Pre-hiring Window (December). The 124.7% spike in December indicates companies are preparing a month before budgets officially reset for the next year.
 
 
-### Geographical Influence: Where are the best job opportunities located?
+## Geographical Influence: Where are the best job opportunities located?
 
 ### **Global Opportunity Density:**
 
-Which countries have the highest number of job postings relative to the number of unique companies hiring there?
+#### Which countries have the highest number of job postings relative to the number of unique companies hiring there?
+![Opportunity Density Table](<Images/Analysis Images/Geographical Influence/opportunity_density_table.png>)
+![Opportunity Density Visualistion](<Images/Analysis Images/Geographical Influence/opportunity_density_vis.png>)
+- **Density Ratio:** This is `total_jobs` / `unique_companies`,representing the average number of job postings per company in a specific country. This serves as a metric for market concentration.
+- **High Density, Emerging Countries:** Countries with a smaller data job market frequently show the highest density ratio. This occurs because global tech infrastructure is often concentrated within a few major firms in these regions rather than spread across a broad local ecosystem. El Salvador (8.62) and Guam (8.60) lead global rankings, suggesting a market dominated by a small number of high-volume hirers.
+- **U.S. as the Central Tech Hub:** The data shows The United States is the definitive global leader in tech job opportunities. With 140,364 total jobs and 25,429 unique companies, it significantly outpaces every other country in the dataset, solidifying its status as the world’s central tech hub.
+- **Secondary Global Tech Hubs:** Aside from the U.S. being the obvious tech hub, the data shows India and several European countries (such as U.K. Germany and France) as the secondary hubs.
+- While these tech hub nations don't always have the highest density ratios, their high volume of unique companies indicates a more developed hiring landscape compared to emerging markets.
+![alt text](<Images/Analysis Images/Geographical Influence/opportunity_map_vis.png>)
+
 
 ### **Remote Job Distribution and pay:**
 
-Which countries have embraced remote work, and which countries are staying in the office? And do remote and onsite jobs differ in pay?
+#### Which countries have embraced remote work, and which countries are staying in the office? And do remote and onsite jobs differ in pay?
+![alt text](<Images/Analysis Images/Geographical Influence/remote_table.png>)
+- **Remote-Forward Hubs:** Remote adoption rate is higher within Western Countries. Canada (24.9%), Mexico (22.1%), and Poland (20.7%) showing significant remote job proportions.
+- **Traditional In Office Cultures**: Remote adoption remains lowest in most Asian countries. Traditional "in-office" cultures persist in these regions, despite the global shift in tech. For example, Hong Kong (1.6%), Singapore (2.7%), and Malaysia (2.9%). This reluctance to adapt to remote work likely stems from traditional business philosophies that prioritise physical presence and established routines over digital flexibility.
+![alt text](<Images/Analysis Images/Geographical Influence/remote_vis1.png>)
+![alt text](<Images/Analysis Images/Geographical Influence/remote_vis2.png>)
+
+- **The Remote Premium:** For the 2024 data job market, remote roles tend to have a higher average salary than onsite positions. This seems to be the effect of seniority. Senior positions show the highest remote adoption at 14.6% and have comparatively higher salaries reaching $153,423 compared to $138,780 for onsite. Conversely, Junior/Entry roles are are the only category where onsite pay exceeds remote pay, likely because these roles require more hands-on, onsite mentorship.
+![alt text](<Images/Analysis Images/Geographical Influence/remote_table2.png>)
+
 
 ### **Degree Importance By Country:**
 
-Does where I live change how much employers care about a degree? And does a degree requirement lead to higher pay?
+#### Does where I live change how much employers care about a degree? And does a degree requirement lead to higher pay?
+![alt text](<Images/Analysis Images/Geographical Influence/degree_table.png>)
+- **Global Shift to Skills-First Hiring:** By the end of 2024, 60% of job postings didn't require a degree and instead favoured the technical skills you brought to the table.
+![alt text](<Images/Analysis Images/Geographical Influence/degree_proportion_vis.png>)
+- **Degree Importance in Europe:** European countries tend to require degrees more than other countries in the world, like U.K. (52.5%) and Poland (50.8%), with over half of their job postings requiring a degree.
+- The rest of the world has largely moved past this requirement with Less than ~40% of job postings requireing a degree.
+- **The U.S. Tech Hub as a Market Disruptor:** The global tech hub, the U.S. has 78% of its job postings not requiring a degree. Given the U.S. tech industry's market's influence on global hiring trends, this suggests that degrees may become increasingly optional for staying competitive in the data industry.
+![alt text](<Images/Analysis Images/Geographical Influence/degree_salary_vis.png>)
+- **No relationship between degree and higher pay:** The data suggests there is no correlation between holding a degree and a higher salary. Professionals with degrees in some countries may have a higher pay while in other countries, professionals don't need a degree for a higher pay. 
 
-### **Role-Specific Geographic Hubs**
 
-Were there any 'specialised hubs' (countries) for specific roles? Is there a country-specific premium for certain roles?
 
-### Role Comparison Analysis: Which career path offers the highest salary return relative to its technical complexity?
+
+### Overall Geographical Influence Key Insights:
+- **Global Tech Hubs:** The U.S. claims the "Global Tech Hub" title due to its sheer volume of job postings and companies. Secondary tech hubs include several European nations, India, and Singapore for East/South East Asia.
+- **Global Opportunity Density:** Smaller and emerging markets like El Salvador and Guam have the highest job-per-company density, while more developed job markets (U.S., India, Several European Countries) have a substantially higher volume of job postings and unique companies, despite not having as high of a density.
+- **Cultural Adoption Divide:** Asian job markets have lower remote job adoption rates likely due to deeply rooted onsite traditions, while western markets are less conservative and have higher remote adoption rates.
+- **Remote Pay Premium:** The average remote salary exceeds the average onsite salary due to senior roles having mroe remote positions and higher pay, skewing those averages.
+- **Global Shift to "Skills-First":** Degrees are most prevalent in Europe, but globally, the market is moving towards a skills-first economy, increasingly favouring technical skills competence over holding a formal degree, all without influencing a professional's yearly salary.
+- **U.S. favouring Skills over Degrees:** The global tech hub, the U.S. is favouring technical skills over a degree with over 78% of job postings not requiring a degree. Given the U.S. tech industry's market's influence on global hiring trends, this suggests that degrees may become increasingly optional for staying competitive in the data industry.
+
+
+
+## Role Comparison Analysis: Which career path offers the highest salary return relative to its technical complexity?
 
 #### **Technical ROI:**
 
